@@ -1,0 +1,136 @@
+#%RAML 1.0
+title: Retail Shopping Cart Process API
+
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+    responses:
+      401:
+        description: Unauthorized, The client_id or client_secret are not valid or the client does not have access.
+      503:
+        description: Contracts Information Unreachable.
+
+types:  
+  products: 
+    type: object
+    properties: 
+      productId: 
+        type: string
+        description: | 
+          ID of product
+      number:  
+        type: integer
+        description: |
+          Number of products
+      MRP:
+        type: number
+        description: |
+          Total cost of the product
+      
+
+  cart: 
+    type: object
+    properties:
+      custID?:
+        type: string?
+        description: | 
+          customer ID 
+      cartID?:
+        type: string?
+        description: | 
+          cart ID
+      products: 
+        type: products[]
+        description: | 
+          Products in cart
+      shippingCharges?:
+        type: number?
+        description: |
+          total shipping cost for product  
+      paymentMethod?:
+        type: string?
+        enum: [Card, COD, Wallet]
+        description: |
+          type of payment
+      totalPrice?:
+        type: number?
+        description: |
+          total Price Details of the products in cart of customer
+
+resourceTypes:
+  collection:
+    description: this API updates and deletes cart
+    is : [client-id-required]
+    put:
+      description: Update orders in cart  
+      body:
+        application/json:
+          type: cart
+          example: !include /examples/update-order-put.raml          
+      responses:
+        200:
+          body: 
+            application/json: 
+              example: <<exampleReference2>>
+    delete:
+      description: Cancel cart order
+      responses:
+        200:
+          body:
+            application/json: 
+              example: <<exampleReference3>>    
+  
+
+/orders:
+  /submitOrder:
+    is : [client-id-required]
+    post:
+      description: Create shopping Cart
+      queryParameters:
+        paymentMethod:
+          enum:
+            - Card
+            - COD
+            - Wallet
+      body:
+        application/json:
+            type: cart[]
+            example: !include /examples/submit-order-post.raml             
+      responses:
+        201:
+          body: 
+            application/json: 
+              example: 
+                {
+                  "message": "Shopping cart was created"
+                }
+
+
+  /{cartID}:
+      type:
+        collection:
+          exampleReference2:  |
+            {
+              "message": "Shopping cart was updated"
+            }
+          exampleReference3:  |
+            {
+              "message": "Order cart was deleted"
+            }
+
+
+  /priceDetails:
+    /{custId}:
+      is : [client-id-required]
+      get: 
+        description: Get cost of products and  total price  of customer's cart
+        responses:
+          200:
+            body:
+              application/json:
+                type: cart[]
+                example: !include /examples/pricing-details-get.raml
