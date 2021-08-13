@@ -11,7 +11,7 @@ APIs protected using Client_ID Client_Secret to allow only authorized users to m
 
 
 Cloudhub Endpoints:
-1. GET mule-worker-internal-<< cloudHubUrl >>:8091/api/reports
-2. GET mule-worker-internal-<< cloudHubUrl >>:8091/api/reports/{reportId}
-3. GET mule-worker-internal-<< cloudHubUrl >>:8091/api/reports/{reportId}/fields
+1. GET mule-worker-internal-<<cloudHubUrl>>:8091/api/reports
+2. GET mule-worker-internal-<<cloudHubUrl>>:8091/api/reports/{reportId}
+3. GET mule-worker-internal-< cloudHubUrl >:8091/api/reports/{reportId}/fields
 4. POST mule-worker-internal-<< cloudHubUrl >>:8091/api/query
